@@ -6,7 +6,7 @@ Bueno como ya fue comentado, esta box es sobre Analisis de Malware, así que vam
 ![alt text](<Screenshot from 2024-04-25 14-16-10.png>) 
 
 Despues de descomprimir el .zip "lockpick1" nos encontramos con 2 archivos de texto y otro .zip que al intentar descomprimir me pide una contraseña.
-![alt text](Screenshot_1.png)
+![alt text](Lockpick/.src/Screenshot_1.png)
 La contraseña la encontré dentro del .txt DANGER
 
 Después de descomprimir bescrypt.zip nos encontramos con un archivo .exe que OBVIAMENTE no vamos a ejecutar jeje prefiero seguir teniendo mi maquina virtual a salvo, en este caso es un programa malicioso tipo ransomware
