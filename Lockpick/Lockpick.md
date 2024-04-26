@@ -7,19 +7,23 @@ Bueno como ya fue comentado, esta box es sobre Analisis de Malware, así que vam
 
 
 Despues de descomprimir el .zip "lockpick1" nos encontramos con 2 archivos de texto y otro .zip que al intentar descomprimir me pide una contraseña.
+
 ![Screenshot_1](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/2d47218a-4141-44e0-b2e7-06427b6b8f4e)
 
 La contraseña la encontré dentro del .txt DANGER
 
-Después de descomprimir bescrypt.zip nos encontramos con un archivo .exe que OBVIAMENTE no vamos a ejecutar jeje prefiero seguir teniendo mi maquina virtual a salvo, en este caso es un programa malicioso tipo ransomware
+Después de descomprimir bescrypt.zip nos encontramos con un archivo .exe que OBVIAMENTE no vamos a ejecutar jeje prefiero seguir teniendo mi maquina virtual a salvo, en este caso es un programa malicioso tipo ransomware.
+
 ![Screenshot_2](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/ce2546c9-3345-487e-a9d5-b2425441915f)
 
 
 Todo el archivaje encriptado se encuentra en el directorio "forela-criticaldata"
+
 ![Screenshot_3](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/ea803e76-4577-48ab-9f98-6f6d2edd0cb5)
 
 
 Desde ya que si tratamos de abrir o leer el contenido de alguno de estos archivos somos notificados del encriptado de los mismos. 
+
 ![Screenshot_4](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/57af0c7f-f721-48e9-9e39-2dd398282650)
 
 
@@ -27,9 +31,11 @@ Lo que va a ocurrir ahora es que vamos a tratar de desencriptar los archivos :D 
 Ahora si, que se armen los pinches chingadazos >:)
 ## Task 1 - Proporcionar el string de la clave de cifrado utilizada para cifrar los archivos. 
 Como ya sabrán, un string es una cadena de caracteres individuales, lo digo por si alguien se confunde con esa palabra. Para esto vamos a analizar el exe bscrypt3.2 haciendo un poco de ingenieria inversa basica, yo voy a utilizar radare (porque no conozco otra forma o programa ajskaj)
+
 ![Screenshot_5](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/7f7755f6-f85c-40ee-a040-c0fd29e8da5c)
 
 Si bien hay varios ficheritos vamos a enfocarnos en el que aparenta ser el mas importante, el llamado "main" y vamos a revisar que se trae entre datos (badumtsss)
+
 ![Screenshot_6](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/ba34262c-4694-4be3-ad7c-3d4416b22029)
 
 Acá es donde me pongo serio y les invito a leer o simplemente copiar y pegar la clave en la tarea asignada y seguir como si nada (no lo hagan, lean >:C)
@@ -41,17 +47,20 @@ Líneas 1-3: Prólogo Estándar de la Función
 -4883ec10 sub rsp, 0x10: Esta línea asigna algo de espacio en la pila para las variables locales. Resta 0x10 (16 bytes) del puntero de la pila, creando efectivamente un nuevo "marco" en la pila para esta función.
 
 Líneas 4-5: Cargando Direcciones de Cadenas
+
 ![Screenshot_8](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/3fd006d8-f269-46b0-bf47-16cf832bb717)
 
 -488d05280a00. lea rax, str.bhUlIshutrea98liOp ; 0x217d ; "bhUlIshutrea98liOp": Esta línea usa la instrucción lea (obtener dirección efectiva). Calcula la dirección de la cadena "bhUlIshutrea98liOp" (que probablemente esté almacenada en otra parte de la memoria) y la almacena en el registro rax.
 -488945f8 mov qword [var_8h], rax: Esta línea mueve la dirección almacenada en rax (que apunta a la cadena "bhUlIshutrea98liOp") a la ubicación de memoria en [rbp-0x8]. Esto efectivamente crea una variable local llamada var_8h y almacena la dirección de la cadena en ella.
 
 Líneas 6-7: Cargando Direcciones de Cadenas (Otra Cadena)
+
 ![Screenshot_9](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/d2b768e3-952a-4936-bac5-ba0e5970141d)
 
 -Esta parte sigue la misma lógica que las líneas 4-5. Calcula la dirección de la cadena "/forela-criticaldata/" y la almacena en la variable local var_10h en [rbp-0x10].
 
 Líneas 8-11: Configurando Argumentos de Llamada de Función
+
 ![Screenshot_10](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/d333f077-c197-4ab1-9d68-01e443a155a6)
 
 -488b55f8 mov rdx, qword [var_8h]: Esta línea carga el valor almacenado en var_8h (que es la dirección de "bhUlIshutrea98liOp") en el registro rdx.
@@ -60,11 +69,13 @@ Líneas 8-11: Configurando Argumentos de Llamada de Función
 -4889c7 mov rdi, rax ; char *arg1: Esta línea mueve el contenido de rax (dirección de "/forela-criticaldata/") al registro rdi. Esto probablemente establece el primer argumento para la llamada a la función.
 
 Línea 12: Llamando a la Función
+
 ![Screenshot_11](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/9e67f920-c8e2-47c7-ba68-dc708c798df7)
 
 -e85dfdffff call sym.process_directory: Esta línea es la llamada a la función real. Utiliza la instrucción call y especifica la dirección de la función a la que se llamará, que en este caso es sym.process_directory. Es probable que aquí sea donde ocurre el procesamiento principal con los argumentos proporcionados.
 
 Líneas 13-15: Epílogo y Retorno
+
 ![Screenshot_12](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/3b31d488-3f8d-4ad5-aace-35feca698333)
 
 -b800000000 mov eax, 0: Esta línea establece el registro eax en 0, lo que podría usarse como un valor de retorno para la función (aunque no está garantizado).
@@ -164,12 +175,14 @@ bool encriptar_archivo(const char* archivo_entrada, const char* archivo_salida)
 }
 
 En realidad el código está en inglés pero como no vamos a utilizarlo lo traduje a español así es mucho mas legible <3 Ahora si, como dije antes, tenemos la clave de cifrado, por lo que mediante un pequeño script en Go vamos a descifrar los ficheros yaaaaaaaaaaaaaaaaaaaaaaaaaaay!! :D
+
 ![Screenshot_13](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/c41ce56f-a336-4049-b532-fb236ad7ea54)
 
 ![Screenshot_14](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/511f7de0-00a3-4031-b4fd-9ebb87ea205a)
 
 
 Despues de terminar mi descifrainador y ubicarlo en el directorio lockpick1 lo ejecuto y logramos descifrar todos los archivos cifrados :D
+
 ![Screenshot_15](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/6ab128f2-8891-4d6f-beea-7ce2d37556d4)
 
 
@@ -206,37 +219,44 @@ Muestra el progreso de la operación de descifrado.
 Una vez que se completan todas las operaciones de descifrado, imprime un mensaje indicando que la operación ha finalizado.
 
 Ahora si, dentro de la carpeta forela-criticaldata vamos a encontrar una carpeta llamada "descifrados" 
+
 ![Screenshot_16](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/8029e609-b671-45f7-b7ce-55de9beb088e)
 
 
 #AHORA SI VAMOS A PODER RESPONDER TODAS LAS PREGUNTAS!!!! 
 
 Retomando la pregunta original del correo de wbevansn1, vamos a buscar en la base de datos filtrando por su nombre a ver que encontramos. 
+
 ![Screenshot_17](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/4c31b451-ffd1-4e94-a86e-fd40e7168bd9)
 
 
 ## Task 3. Cual es la MAC y serial de la notebook de mi buen amigo Hart Manifould? 
 Esto vamos a buscarlo en el fichero it_assets.xml
+
 ![Screenshot_18](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/1a8c0bbc-a7fb-49a5-a50d-c0ed84a909b4)
 
 <MAC>E8-16-DF-E7-52-48</MAC><asset_type>laptop</asset_type><serial_number>1316262</serial_number>
 
 ## Task 4. Cual es la dirección de correo del atacante? 
 Cada archivo cifrado tiene un mensaje de amenaza diciendo cual es el correo. En este caso best24@protonmail.com
+
 ![Screenshot_19](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/b19ce32e-f923-4737-ac96-a1ab707e7735)
 
 
 ## Task 5. Los CIBERPATRULLADORES de Londres sospechan de un insider que colaboro en el ataque, averiguar quien fue la persona que sacó el mayor porcentaje de ganancia con un solo movimiento.
 Acá vamos a recurrir al archivo trading-firebase_bkup.json, al principio me puse a buscar uno por uno hasta que me dí cuenta de la cantidad INMENSA de información que había, asi que con ayuda de bash filtramos algo de información y obtenemos el resultado. 
+
 ![Screenshot_20](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/b59fe6d9-b059-4eaa-9645-d8a5e67e15c8)
 
 
 ## Task 6. Nuestro equipo quiere saber la dirección IP de cierta personita que se cree está compartiendo su cuenta, investigar a O’Hederscoll Karylin. Vamos a buscar en sales_forecast.xlsx y filtrar por el nombre de O’Hederscoll Karylin.
 Para la siguiente tarea utilicé un programa llamado "visidata" para instalarlo (si tienen kali como yo) haganse primero un "sudo apt update" y despues "apt install visidata". El comando para utilizarlo es "vd *archivo*" Así pudimos encontrar a la famosa Karylin.
+
 ![Screenshot_21](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/3b2cf0c3-c3d1-4b26-8706-6215acea70e0)
 
 
 ## Task 7. Cual de las siguientes extensiones no fueron atacadas por el malware? .txt, .sql,.ppt, .pdf, .docx, .xlsx, .csv, .json, .xml.
+
 ![Screenshot_22](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/dc7f82bc-00b6-46d3-9fdc-e39c138528d6)
 
 Tal como se ve en la imagen, la extensión que no fue encriptada fue .ppt
