@@ -264,3 +264,4 @@ Tal como se ve en la imagen, la extensión que no fue encriptada fue .ppt
 ## Task 8, 9 y 10. Estas van de lo mismo, se quiere verificar0 la integridad de los archivos mediante su hash. Debemos dar el hash correspondiente a cada archivo después del descifrado.
 ![Screenshot_23](https://github.com/breaakerr/Sherlocks-Writeups/assets/141375378/424cd924-ef49-41b1-836b-7d6b4549fb87)
 
+# Bueno esto fue todo :D espero que les sea de utlidad y nos veremos pronto con algun otro writeup, dependiendo que tanto animo de hacer otro tenga jaja hasta pronto :)
