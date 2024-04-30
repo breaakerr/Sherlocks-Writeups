@@ -23,12 +23,19 @@ La tarea 1 nos pide averiguar la IP pero ahora que lo pienso vamos a matar vario
 
 Y acá vemos MUCHAS cosas interesantes. Veamos en detalle:
 
-    *AuthorizedKeysCommand: Es una directiva de configuración de SSH que especifica un comando que debe ejecutarse para obtener las claves públicas autorizadas para la autenticación del usuario.
+    *AuthorizedKeysCommand: Es una directiva de configuración de SSH que especifica un comando que debe ejecutarse 
+    para obtener las claves públicas autorizadas para la autenticación del usuario.
 
-    */usr/share/ec2-instance-connect/eic_run_authorized_keys: Es el comando que se está ejecutando como parte de la autorización de las claves públicas. En sistemas basados en AWS, EC2 Instance Connect proporciona un método seguro para conectarse a instancias de EC2 mediante la autenticación de claves SSH utilizando IAM (Identity and Access Management).
+    */usr/share/ec2-instance-connect/eic_run_authorized_keys: Es el comando que se está ejecutando como parte de 
+    la autorización de las claves públicas. En sistemas basados en AWS, EC2 Instance Connect proporciona un método 
+    seguro para conectarse a instancias de EC2 mediante la autenticación de claves SSH utilizando IAM 
+    (Identity and Access Management).
 
-    *root: Indica que el usuario para el que se está intentando realizar la autenticación de claves públicas es el usuario root, que es el usuario administrativo en sistemas Linux.
+    *root: Indica que el usuario para el que se está intentando realizar la autenticación de claves públicas 
+    es el usuario root, que es el usuario administrativo en sistemas Linux.
 
-    *SHA256:4vycLsDMzI+hyb9OP3wd18zIpyTqJmRq/QIZaLNrg8A: Esto parece ser una huella digital de la clave pública que se está utilizando para intentar la autenticación. El formato SHA256: sugiere que es el hash SHA-256 de la clave pública.
+    *SHA256:4vycLsDMzI+hyb9OP3wd18zIpyTqJmRq/QIZaLNrg8A: Esto parece ser una huella digital de la clave pública 
+    que se está utilizando para intentar la autenticación. El formato SHA256: sugiere que es el hash SHA-256 de la clave pública.
 
-    *failed, status 22: Indica que la operación de obtener las claves públicas autorizadas ha fallado, y el código de estado 22 sugiere que ha habido un error relacionado con la validez de la clave o con el proceso de autenticación en sí.
+    *failed, status 22: Indica que la operación de obtener las claves públicas autorizadas ha fallado, y el código 
+    de estado 22 sugiere que ha habido un error relacionado con la validez de la clave o con el proceso de autenticación en sí.
